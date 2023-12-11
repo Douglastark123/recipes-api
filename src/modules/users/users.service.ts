@@ -1,35 +1,56 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, User as UserModel } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateUserDto } from './dto/user.dto';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaService: PrismaService) {}
 
   async findAll(): Promise<Omit<UserModel, 'password'>[]> {
-    const users = await this.prisma.user.findMany();
+    const users = await this.prismaService.user.findMany();
 
     users.forEach((user: UserModel) => delete user.password);
 
     return users;
   }
 
-  async findById(id: string): Promise<Omit<UserModel, 'password'>> {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: id,
-      },
-    });
+  async findById(
+    id: string,
+  ): Promise<Omit<UserModel, 'password'> | PrismaClientKnownRequestError> {
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          id,
+        },
+      });
 
-    delete user.password;
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
 
-    return user;
+      delete user.password;
+
+      return user;
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2023') {
+          throw new NotFoundException(`User with ID ${id} not found`);
+        }
+        return e;
+      }
+    }
   }
 
   async findByEmail(email: string): Promise<UserModel> {
-    return await this.prisma.user.findUnique({
+    return await this.prismaService.user.findUnique({
       where: {
         email: email,
       },
@@ -37,16 +58,12 @@ export class UsersService {
   }
 
   async create(
-    user: Prisma.UserCreateInput,
+    user: CreateUserDto,
   ): Promise<Omit<UserModel, 'password'> | string> {
-    const userExists = await this.prisma.user.findUnique({
-      where: {
-        email: user.email,
-      },
-    });
+    const userExists = await this.findByEmail(user.email);
 
     if (userExists) {
-      return 'User already exists';
+      throw new ConflictException('User with this email already exists');
     }
 
     const hashedPassword = await bcrypt.hash(user.password, 12);
@@ -56,7 +73,7 @@ export class UsersService {
       password: hashedPassword,
     };
 
-    const userCreated = await this.prisma.user.create({
+    const userCreated = await this.prismaService.user.create({
       data,
     });
 

@@ -1,3 +1,5 @@
+Alunos: Douglas Antunes da Silva e Raphael Kauan Fantecelle Antunes
+
 # recipes-api
 
 ## Descrição
@@ -7,11 +9,11 @@ API de receitas feita como parte dos requisitos para cumprimento da matéria de 
 ### Requisitos
 - [x] Criar um endpoint para Cadastro de usuários
 - [x] Criar um endpoint para Login de usuários
-- [ ] Criar um endpoint para Cadastro de Receitas
-- [ ] Criar um endpoint para Listagem de Receitas
-- [ ] Criar um endpoint para Visualizar uma Receita específica
-- [ ] Criar um endpoint para Edição de Receitas
-- [ ] Criar um endpoint para Exclusão de Receitas
+- [x] Criar um endpoint para Cadastro de Receitas
+- [x] Criar um endpoint para Listagem de Receitas
+- [x] Criar um endpoint para Visualizar uma Receita específica
+- [x] Criar um endpoint para Edição de Receitas
+- [x] Criar um endpoint para Exclusão de Receitas
 - [ ] Criar um endpoint para adição de uma imagem a uma receita
 - [ ] Criar um endpoint para acessar a imagem de uma receita
 - [ ] Criar testes unitários que cubram no mínimo 30% dos arquivos

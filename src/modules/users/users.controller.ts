@@ -12,8 +12,10 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  // Omit<UserModel, 'password'>
+
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Omit<UserModel, 'password'>> {
+  async findOne(@Param('id') id: string): Promise<any> {
     return this.usersService.findById(id);
   }
 }
