@@ -18,14 +18,14 @@ export class AuthService {
   ): Promise<Omit<User, 'password'>> {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
-      const { password, ...result } = user;
-      return result;
+      delete user.password;
+      return user;
     }
 
     return null;
   }
 
-  async login(user: any) {
+  async login(user: Omit<User, 'password'>) {
     const payload = { email: user.email, sub: user.id };
 
     return {

@@ -2,22 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, User as UserModel } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<UserModel[]> {
-    return this.prisma.user.findMany();
+  async findAll(): Promise<Omit<UserModel, 'password'>[]> {
+    const users = await this.prisma.user.findMany();
+
+    users.forEach((user: UserModel) => delete user.password);
+
+    return users;
   }
 
-  async findById(id: string): Promise<UserModel> {
-    return await this.prisma.user.findUnique({
+  async findById(id: string): Promise<Omit<UserModel, 'password'>> {
+    const user = await this.prisma.user.findUnique({
       where: {
         id: id,
       },
     });
+
+    delete user.password;
+
+    return user;
   }
 
   async findByEmail(email: string): Promise<UserModel> {
@@ -52,8 +60,8 @@ export class UsersService {
       data,
     });
 
-    const { password, ...result } = userCreated;
+    delete userCreated.password;
 
-    return result;
+    return userCreated;
   }
 }

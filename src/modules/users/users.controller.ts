@@ -8,12 +8,12 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async findAll(): Promise<UserModel[]> {
+  async findAll(): Promise<Omit<UserModel, 'password'>[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<UserModel> {
+  async findOne(@Param('id') id: string): Promise<Omit<UserModel, 'password'>> {
     return this.usersService.findById(id);
   }
 }
