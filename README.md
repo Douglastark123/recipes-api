@@ -33,27 +33,11 @@ $ npm install
 
 ```bash
 # development
-$ npm run start
-
-# watch mode
+$ docker-compose up -d # spin up database
+$ npx prisma db push # 
 $ npm run dev
-
-# production mode
-$ npm run prod
 ```
 
-## Testar
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
 ## Autores
 
 - Douglas Antunes da Silva

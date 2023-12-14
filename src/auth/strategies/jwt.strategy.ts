@@ -13,8 +13,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // Omit<User, 'password'>
-
   async validate(payload: { sub: string; email: string }): Promise<any> {
     const decodedJWT = { id: payload.sub, email: payload.email };
 
