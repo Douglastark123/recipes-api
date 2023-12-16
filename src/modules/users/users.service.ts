@@ -3,7 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, User as UserModel } from '@prisma/client';
+import {
+  Prisma,
+  User as UserModel,
+  Recipe as RecipeModel,
+} from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -80,5 +84,28 @@ export class UsersService {
     delete userCreated.password;
 
     return userCreated;
+  }
+
+  async findUserRecipes(
+    id: string,
+  ): Promise<RecipeModel[] | PrismaClientKnownRequestError> {
+    try {
+      await this.findById(id);
+
+      const recipes = await this.prismaService.recipe.findMany({
+        where: {
+          authorId: id,
+        },
+      });
+
+      return recipes;
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2023') {
+          throw new NotFoundException(`User with ID ${id} not found`);
+        }
+        return e;
+      }
+    }
   }
 }

@@ -30,6 +30,9 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
+      token_type: 'Bearer',
+      expires_in: `1d`,
+      userId: user.id,
     };
   }
 }

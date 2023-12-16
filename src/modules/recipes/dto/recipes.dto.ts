@@ -9,6 +9,10 @@ export class CreateRecipeDto implements Partial<RecipeModel> {
 
   @IsNotEmpty()
   @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsString()
   content: string;
 
   @IsNotEmpty()

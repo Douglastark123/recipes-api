@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRecipeDto, UpdateRecipeDto } from './dto/recipes.dto';
 import { UsersService } from 'src/modules/users/users.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, Recipe as RecipeModel } from '@prisma/client';
 
 @Injectable()
 export class RecipesService {
@@ -12,7 +12,7 @@ export class RecipesService {
     private usersService: UsersService,
   ) {}
 
-  async findAll(): Promise<any> {
+  async findAll(): Promise<RecipeModel[]> {
     const recipes = await this.prismaService.recipe.findMany();
 
     return recipes;

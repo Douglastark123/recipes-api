@@ -16,4 +16,9 @@ export class UsersController {
   async findOne(@Param('id') id: string): Promise<any> {
     return this.usersService.findById(id);
   }
+
+  @Get(':id/recipes')
+  async findUserRecipes(@Param('id') id: string): Promise<any> {
+    return this.usersService.findUserRecipes(id);
+  }
 }

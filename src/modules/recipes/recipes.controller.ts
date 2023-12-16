@@ -21,7 +21,7 @@ export class RecipesController {
   constructor(private recipesService: RecipesService) {}
 
   @Get()
-  async findAll(): Promise<any> {
+  public async findAll(): Promise<any> {
     return await this.recipesService.findAll();
   }
 
