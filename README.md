@@ -34,6 +34,7 @@ $ npm install
 ```bash
 # development
 $ docker-compose up -d # spin up database
+$ npx prisma generate # 
 $ npx prisma db push # 
 $ npm run dev
 ```
